@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
+/*   By: broboeuf <broboeuf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 14:47:10 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/02 07:58:37 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/02 10:53:40 by broboeuf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,28 @@ typedef struct s_shell
 	t_pipex			*pipex;
 	int				exit_status;
 }					t_shell;
+
+typedef enum e_token_type
+{
+	OR,
+	AND,
+	WORD,
+	PIPE,
+	STRING,
+	DIR_IN,
+	DIR_OUT,
+	DIR_HEREDOC,
+	DIR_OUT_APPEND,
+	ENV_VAR,
+	COMMENT
+}					t_token_type;
+
+typedef struct s_token
+{
+	char			*value;
+	t_token_type	type;
+	struct s_token	*next;
+}					t_token;
 
 /* Redirection */
 void				execute_pipex_from_minishell(t_shell *shell);
