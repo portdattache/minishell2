@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 20:01:50 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/03/25 12:10:56 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/02 18:47:30 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /* Va initialiser le nouveau noeud avec les valeurs par defaut */
 void	init_pipe_node(t_pipex *node, t_cmd *cmd, t_shell *shell)
 {
-	node->cmd = NULL;
+	// node->cmd = NULL;
 	node->args = NULL;
 	node->envp = convert_env_to_array(shell->env);
 	node->input = -1;

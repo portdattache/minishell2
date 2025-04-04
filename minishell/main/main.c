@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 17:09:48 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/02 13:12:12 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/02 19:12:42 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ static void	exec_direction(char **args, t_shell *shell, char *line)
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell	shell;
+	t_cmd	cmd;
 	char	*line;
 	char	**args;
 
 	(void)argc;
 	(void)argv;
 	ft_bzero(&shell, sizeof(t_shell));
-	first_init(&shell);
-	shell.env->envp = envp;
+	init_shell(&shell, envp);
 	while (1)
 	{
 		line = readline(PROMPT);
@@ -51,7 +51,7 @@ int	main(int argc, char **argv, char **envp)
 		args = args_split(line);
 		if (!args)
 			free(line);
-		init_shell(&shell, envp);
+		init_cmd(&cmd, &shell, args);
 		exec_direction(args, &shell, line);
 	}
 	main_cleaner(args, &shell);

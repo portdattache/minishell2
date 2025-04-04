@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 14:47:10 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/02 17:27:55 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:08:01 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ typedef struct s_env
 typedef struct s_cmd
 {
 	char			**cmds;
+	char			**args;
+	char			*path;
 	int				pipefd[2];
 	t_env			*env;
 	pid_t			pid;
@@ -86,6 +88,9 @@ void				init_shell(t_shell *shell, char **envp);
 void				first_init(t_shell *shell);
 void				first_init_env(t_shell *shell);
 t_pipex				*append_pipe_node(t_pipex *pipex, t_pipex *current);
+void				parse_env_var(t_env *env);
+void				add_env_to_shell(t_shell *shell, char *env_line);
+void				init_cmd(t_cmd *cmd, t_shell *shell, char **args);
 
 // /* Initialisation de la struct */
 t_pipex				*init_minishell_pipeline(t_cmd *cmd_list, t_shell *shell);

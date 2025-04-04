@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 16:37:26 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/02 13:08:54 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:06:59 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,7 @@
 
 void	init_shell(t_shell *shell, char **envp)
 {
-	int		i;
-	t_env	*new_env;
-	t_env	*prev_env;
+	int	i;
 
 	if (shell->env)
 		return ;
@@ -27,26 +25,24 @@ void	init_shell(t_shell *shell, char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		new_env = malloc(sizeof(t_env));
-		if (!new_env)
-			exit(EXIT_FAILURE);
-		new_env->var = ft_strdup(envp[i]);
-		new_env->key = NULL;
-		new_env->value = NULL;
-		new_env->next = NULL;
-		new_env->prev = NULL;
-		if (!shell->env)
-			shell->env = new_env;
-		else
-		{
-			prev_env = shell->env;
-			while (prev_env->next)
-				prev_env = prev_env->next;
-			prev_env->next = new_env;
-			new_env->prev = prev_env;
-		}
+		add_env_to_shell(shell, envp[i]);
 		i++;
 	}
+}
+
+void	init_cmd(t_cmd *cmd, t_shell *shell, char **args)
+{
+	if (!cmd || !args)
+		return ;
+	cmd->cmds = NULL;
+	cmd->args = args;
+	cmd->path = NULL;
+	cmd->pipefd[0] = -1;
+	cmd->pipefd[1] = -1;
+	cmd->env = shell->env;
+	cmd->pid = 0;
+	cmd->prev = NULL;
+	cmd->next = NULL;
 }
 
 void	cleanup_shell(t_shell *shell)
