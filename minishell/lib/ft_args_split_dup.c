@@ -1,28 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   ft_args_split_dup.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/20 19:00:07 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/02 18:30:40 by bcaumont         ###   ########.fr       */
+/*   Created: 2025/04/05 11:45:11 by bcaumont          #+#    #+#             */
+/*   Updated: 2025/04/05 11:45:32 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int	ft_env(t_shell *shell)
+char	**ft_args_split_dup(char **args)
 {
-	t_env	*env;
+	int		i;
+	char	**new;
 
-	env = shell->env;
-	if (env == NULL)
-		return (1);
-	while (env)
+	i = 0;
+	while (args[i])
+		i++;
+	new = malloc(sizeof(char *) * (i + 1));
+	if (!new)
+		return (NULL);
+	i = 0;
+	while (args[i])
 	{
-		ft_printf("%s=%s\n", env->key, env->value);
-		env = env->next;
+		new[i] = ft_strdup(args[i]);
+		if (!new[i])
+			return (ft_args_split_free(new), NULL);
+		i++;
 	}
-	return (0);
+	new[i] = NULL;
+	return (new);
 }

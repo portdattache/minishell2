@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:14:06 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/02 07:49:43 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/08 13:27:37 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	execute_pipex_from_minishell(t_shell *shell)
 
 	if (!shell || !shell->cmd)
 	{
-		ft_printf("Error: Invalid shell or command\n");
+		ft_printf("minishell: %s: command not found\n", shell->cmd->args[0]);
 		return ;
 	}
 	pipex = init_minishell_pipeline(shell->cmd, shell);
@@ -27,6 +27,6 @@ void	execute_pipex_from_minishell(t_shell *shell)
 		ft_printf("Error: Init pipe failed\n");
 		return ;
 	}
-	process_pipeline(pipex);
-	ft_free_pipeline(pipex);
+	process_pipeline(pipex, shell);
+	// ft_free_pipeline(pipex);
 }

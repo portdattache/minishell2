@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 16:37:26 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/02 08:00:11 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/08 11:47:34 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void	init_shell(t_shell *shell, char **envp)
 {
-	int		i;
-	t_env	*new_env;
-	t_env	*prev_env;
+	int	i;
 
+	if (shell->env)
+		return ;
 	shell->env = NULL;
 	shell->cmd = NULL;
 	shell->pipex = NULL;
@@ -25,45 +25,26 @@ void	init_shell(t_shell *shell, char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		new_env = malloc(sizeof(t_env));
-		if (!new_env)
-			exit(EXIT_FAILURE);
-		new_env->var = ft_strdup(envp[i]);
-		new_env->key = NULL;
-		new_env->value = NULL;
-		new_env->next = NULL;
-		new_env->prev = NULL;
-		if (!shell->env)
-			shell->env = new_env;
-		else
-		{
-			prev_env = shell->env;
-			while (prev_env->next)
-				prev_env = prev_env->next;
-			prev_env->next = new_env;
-			new_env->prev = prev_env;
-		}
+		add_env_to_shell(shell, envp[i]);
 		i++;
 	}
 }
 
-void	cleanup_shell(t_shell *shell)
+t_cmd	*create_cmd_node(t_shell *shell, char **args)
 {
-	t_env	*tmp;
-	t_env	*next;
+	t_cmd	*cmd;
 
-	tmp = shell->env;
-	while (tmp)
-	{
-		next = tmp->next;
-		if (tmp->key != NULL)
-			free(tmp->key);
-		if (tmp->value != NULL)
-			free(tmp->value);
-		if (tmp->var != NULL)
-			free(tmp->var);
-		free(tmp);
-		tmp = next;
-	}
-	shell->env = NULL;
+	cmd = malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	cmd->cmds = ft_args_split_dup(args);
+	cmd->args = args;
+	cmd->path = NULL;
+	cmd->pipefd[0] = -1;
+	cmd->pipefd[1] = -1;
+	cmd->env = shell->env;
+	cmd->pid = 0;
+	cmd->prev = NULL;
+	cmd->next = NULL;
+	return (cmd);
 }

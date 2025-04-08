@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: broboeuf <broboeuf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 14:47:10 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/04 12:43:57 by broboeuf         ###   ########.fr       */
+/*   Updated: 2025/04/08 15:58:42 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_env
 	char			*key;
 	char			*value;
 	char			*var;
+	char			**envp;
 	struct s_env	*next;
 	struct s_env	*prev;
 }					t_env;
@@ -48,6 +49,8 @@ typedef struct s_env
 typedef struct s_cmd
 {
 	char			**cmds;
+	char			**args;
+	char			*path;
 	int				pipefd[2];
 	t_env			*env;
 	pid_t			pid;
@@ -99,18 +102,44 @@ int					execute_builtin(char **args, t_shell *shell);
 int					ft_export(char **args, t_shell *shell);
 int					ft_unset(char **args, t_shell *shell);
 int					is_builtin(char *cmd);
-void				cleanup_shell(t_shell *shell);
+void				cleanup_shell_env(t_shell *shell);
+void				cleanup_shell_cmd(t_shell *shell);
 void				init_shell(t_shell *shell, char **envp);
-void				shell_node(t_shell *shell);
+t_pipex				*append_pipe_node(t_pipex *pipex, t_pipex *current);
+void				parse_env_var(t_env *env);
+void				add_env_to_shell(t_shell *shell, char *env_line);
+t_cmd				*create_cmd_node(t_shell *shell, char **args);
+void				add_cmd_to_shell(t_shell *shell, t_cmd *new_cmd);
+
+/* Topings ~ Tokens */
+void				skip_spaces(char **cmd);
+bool				free_and_return_false(t_token **begin);
+int					handle_quotes(char *cmd, int *i, int *quotes);
+int					get_token_length(char *cmd, int *quotes);
+t_token				*token_new(t_token_type type, char *value);
+int					token_add(t_token **token_list, char *value,
+						t_token_type type);
+int					append_token(t_token **list, char *str, t_token_type type);
+void				token_print_l(t_token *head);
+void				token_print_t(t_token_type type);
+void				token_del(t_token **token);
+void				tokens_free(t_token **token_list);
+void				copy_token(char *command, int length, char *str);
+bool				add_cmd(t_token **begin, char **command);
+bool				create_list_token(t_token **begin, char *cmd);
+size_t				token_list(t_token *first);
+t_token				*token_last(t_token *head);
+void				token_add_front(t_token **first, t_token *new_token);
+bool				is_space(char c);
+bool				handle_special_case(t_token **begin, char *symbol,
+						t_token_type type);
+t_token_type		is_special(const char *str);
+bool				add_special(t_token **begin, char **cmd);
 
 // /* Initialisation de la struct */
 t_pipex				*init_minishell_pipeline(t_cmd *cmd_list, t_shell *shell);
 t_pipex				*create_pipe_node(t_cmd *cmd, t_shell *shell);
 void				set_first_or_last(t_pipex *head);
-void				init_env_list(t_shell *shell, char **envp);
-void				init_env_list2(t_shell *shell);
-// void				pipe_execution(t_pipex *pipex);
-// t_pipex				*add_pipex_node(t_data *data);
 
 // /* Gestion des erreurs & free */
 void				ft_free_pipeline(t_pipex *pipeline);
@@ -130,11 +159,11 @@ int					file_is_executable(char *file);
 
 // /* Gestion des pipes & des forks */
 void				do_pipe(t_pipex *node);
-void				process_pipeline(t_pipex *head);
+void				process_pipeline(t_pipex *pipex, t_shell *shell);
 void				close_pipes(t_pipex *node);
 
 // /* Executeur */
-void				exec(t_pipex *node);
+void				exec(t_pipex *pipex, t_shell *shell);
 void				exec_redirection(t_pipex *node);
 void				here_doc_redirection(t_pipex *node);
 void				here_doc_outfile(t_pipex *node);
@@ -153,47 +182,5 @@ char				*check_current_directory(t_pipex *node);
 char				*check_absolute_path(t_pipex *node);
 char				**convert_env_to_array(t_env *env);
 int					env_list_size(t_env *env);
-
-/* token */
-int					token_add(t_token **token_list, char *value,
-						t_token_type type);
-int					append_token(t_token **list, char *str, t_token_type type);
-
-/* token utils*/
-t_token_type		is_special(const char *str);
-bool				is_space(char c);
-
-/* token spe*/
-bool				handle_special_case(t_token **begin, char *symbol,
-						t_token_type type);
-bool				add_special(t_token **begin, char **command);
-
-/* token ges*/
-void				copy_token(char *command, int length, char *str);
-bool				add_cmd(t_token **begin, char **command);
-
-/* token free*/
-void				token_del(t_token **token);
-void				tokens_free(t_token **token_list);
-
-/* token debug */
-void				token_print_l(t_token *head);
-void				token_print_t(t_token_type type);
-
-/* token add*/
-t_token				*token_new(t_token_type type, char *value);
-size_t				token_list(t_token *first);
-t_token				*token_last(t_token *head);
-void				token_add_front(t_token **first, t_token *new_token);
-
-/* token handle*/
-int					handle_quotes(char *command, int *i, int *quotes);
-int					get_token_length(char *command, int *quotes);
-
-/* parsing test */
-
-void				skip_spaces(char **command);
-bool				free_and_return_false(t_token **begin);
-bool				create_list_token(t_token **begin, char *command);
 
 #endif

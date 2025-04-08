@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 12:42:01 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/03/20 17:02:41 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/05 11:45:44 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ char				**ft_args_split_free(char **split);
 void				ft_strcat(char **dst_ptr, const char *src);
 char				*ft_strnstr(const char *big, const char *little,
 						size_t len);
+char				**ft_args_split_dup(char **args);
 char				*ft_itoa(int n);
 char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));

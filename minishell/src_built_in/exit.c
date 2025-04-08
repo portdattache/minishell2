@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 18:52:23 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/03/22 11:30:34 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/08 11:37:25 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,10 @@ int	ft_exit(char **args, t_shell *shell)
 	exit_code = 0;
 	if (args[1])
 		exit_code = ft_atoi(args[1]);
-	ft_args_split_free(args);
+	ft_free_split(args);
 	rl_clear_history();
-	cleanup_shell(shell);
-	ft_printf("exit\n");
+	cleanup_shell_env(shell);
+	cleanup_shell_cmd(shell);
+	ft_free_pipeline(shell->pipex);
 	exit(exit_code);
 }
