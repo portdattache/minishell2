@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 17:09:48 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/08 15:14:30 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/09 17:24:47 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ static void	main_cleaner(char **args, t_shell *shell)
 
 static void	exec_direction(char **args, t_shell *shell, char *line)
 {
-	if (args[0] && is_builtin(args[0]))
-		execute_builtin(args, shell);
+	if (shell->cmd->args && is_builtin(shell->cmd->args[0]))
+		execute_builtin(shell->cmd->args, shell);
 	else
 		execute_pipex_from_minishell(shell);
 	ft_free_split(args);

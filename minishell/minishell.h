@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 14:47:10 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/08 15:58:42 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/09 10:34:12 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ typedef struct s_shell
 /* Redirection */
 void				execute_pipex_from_minishell(t_shell *shell);
 
-int					ft_echo(char **args);
+int					ft_echo(t_cmd *cmd, char **envp);
 int					ft_cd(char **args, t_shell *shell);
 int					ft_pwd(void);
 int					ft_exit(char **args, t_shell *shell);
@@ -110,6 +110,8 @@ void				parse_env_var(t_env *env);
 void				add_env_to_shell(t_shell *shell, char *env_line);
 t_cmd				*create_cmd_node(t_shell *shell, char **args);
 void				add_cmd_to_shell(t_shell *shell, t_cmd *new_cmd);
+char				*get_env_value(char *name, char **envp);
+void				ft_print_env_path(char **envp);
 
 /* Topings ~ Tokens */
 void				skip_spaces(char **cmd);

@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 18:55:23 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/03/22 14:43:43 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/09 16:03:08 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	execute_builtin(char **args, t_shell *shell)
 	if (ft_strcmp(args[0], "unset") == 0)
 		return (ft_unset(args, shell));
 	if (ft_strcmp(args[0], "echo") == 0)
-		return (ft_echo(args));
+		return (ft_echo(shell->cmd, shell->env->envp));
 	if (ft_strcmp(args[0], "env") == 0)
 		return (ft_env(shell));
 	if (ft_strcmp(args[0], "pwd") == 0)
