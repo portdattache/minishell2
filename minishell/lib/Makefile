@@ -5,6 +5,7 @@ ARFLAGS = rcs
 RM = rm -f
 
 SRC = ft_bzero.c \
+      ft_args_split_dup.c\
       ft_atoi.c \
       ft_isspace.c \
       ft_strjoin_three.c \

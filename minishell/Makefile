@@ -9,6 +9,16 @@ SRC = src_built_in/cd.c\
 	  src_built_in/export.c\
 	  src_built_in/pwd.c\
 	  src_built_in/unset.c\
+	  src_parsing/parsing_space.c\
+	  src_parsing/quotes_handle.c\
+	  src_parsing/token_add.c\
+	  src_parsing/token_debug.c\
+	  src_parsing/token_free.c\
+	  src_parsing/token_ges.c\
+	  src_parsing/token_list.c\
+	  src_parsing/token_spe.c\
+	  src_parsing/dollar_sign.c\
+	  src_executing/signals.c\
 	  pipex/free.c\
 	  pipex/init_pipex.c\
 	  pipex/execution.c\
@@ -18,7 +28,8 @@ SRC = src_built_in/cd.c\
 	  pipex/pipeline.c\
 	  main/execute_pipe_from_minishell.c\
 	  main/init_shell.c\
-	  main/add_env_to_shell.c\
+	  main/add_to_shell.c\
+	  main/cleanup.c\
 	  main/main.c\
 
 OBJS = $(SRC:.c=.o)

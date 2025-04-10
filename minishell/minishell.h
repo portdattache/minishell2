@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 14:47:10 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/04 12:08:01 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/10 23:04:09 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,25 @@
 # include "lib/libft.h"
 
 # define PROMPT "\033[1;32mminishell$> \033[0m"
+
+typedef enum e_token_type
+{
+	WORD,
+	PIPE,
+	INPUT,
+	OUTPUT,
+	HEREDOC,
+	APPEND,
+	ERROR,
+}					t_token_type;
+
+typedef struct s_token
+{
+	char			*value;
+	t_token_type	type;
+	struct s_token	*next;
+	struct s_token	*prev;
+}					t_token;
 
 typedef struct s_env
 {
@@ -72,7 +91,7 @@ typedef struct s_shell
 /* Redirection */
 void				execute_pipex_from_minishell(t_shell *shell);
 
-int					ft_echo(char **args);
+int					ft_echo(t_cmd *cmd, char **envp);
 int					ft_cd(char **args, t_shell *shell);
 int					ft_pwd(void);
 int					ft_exit(char **args, t_shell *shell);
@@ -83,14 +102,46 @@ int					execute_builtin(char **args, t_shell *shell);
 int					ft_export(char **args, t_shell *shell);
 int					ft_unset(char **args, t_shell *shell);
 int					is_builtin(char *cmd);
-void				cleanup_shell(t_shell *shell);
+void				cleanup_shell_env(t_shell *shell);
+void				cleanup_shell_cmd(t_shell *shell);
 void				init_shell(t_shell *shell, char **envp);
-void				first_init(t_shell *shell);
-void				first_init_env(t_shell *shell);
 t_pipex				*append_pipe_node(t_pipex *pipex, t_pipex *current);
 void				parse_env_var(t_env *env);
 void				add_env_to_shell(t_shell *shell, char *env_line);
-void				init_cmd(t_cmd *cmd, t_shell *shell, char **args);
+t_cmd				*create_cmd_node(t_shell *shell, char **args);
+void				add_cmd_to_shell(t_shell *shell, t_cmd *new_cmd);
+char				*get_env_value(char *name, char **envp);
+void				ft_print_env_path(char **envp);
+void				sigint_handler(int sig);
+char				*append_char(char *str, char c);
+char				*get_env_value_from_list(t_env *env, char *name);
+char				*expand_vars(char *str, t_env *env);
+char				*expand_dollar(char *str, t_env *env, char *res, int *i);
+
+/* Topings ~ Tokens */
+void				skip_spaces(char **cmd);
+bool				free_and_return_false(t_token **begin);
+int					handle_quotes(char *cmd, int *i, int *quotes);
+int					get_token_length(char *cmd, int *quotes);
+t_token				*token_new(t_token_type type, char *value);
+int					token_add(t_token **token_list, char *value,
+						t_token_type type);
+int					append_token(t_token **list, char *str, t_token_type type);
+void				token_print_l(t_token *head);
+void				token_print_t(t_token_type type);
+void				token_del(t_token **token);
+void				tokens_free(t_token **token_list);
+void				copy_token(char *command, int length, char *str);
+bool				add_cmd(t_token **begin, char **command);
+bool				create_list_token(t_token **begin, char *cmd);
+size_t				token_list(t_token *first);
+t_token				*token_last(t_token *head);
+void				token_add_front(t_token **first, t_token *new_token);
+bool				is_space(char c);
+bool				handle_special_case(t_token **begin, char *symbol,
+						t_token_type type);
+t_token_type		is_special(const char *str);
+bool				add_special(t_token **begin, char **cmd);
 
 // /* Initialisation de la struct */
 t_pipex				*init_minishell_pipeline(t_cmd *cmd_list, t_shell *shell);
@@ -115,11 +166,11 @@ int					file_is_executable(char *file);
 
 // /* Gestion des pipes & des forks */
 void				do_pipe(t_pipex *node);
-void				process_pipeline(t_pipex *head);
+void				process_pipeline(t_pipex *pipex, t_shell *shell);
 void				close_pipes(t_pipex *node);
 
 // /* Executeur */
-void				exec(t_pipex *node);
+void				exec(t_pipex *pipex, t_shell *shell);
 void				exec_redirection(t_pipex *node);
 void				here_doc_redirection(t_pipex *node);
 void				here_doc_outfile(t_pipex *node);

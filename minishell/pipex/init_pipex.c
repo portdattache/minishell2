@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 20:01:50 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/02 18:47:30 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/08 11:50:52 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 /* Va initialiser le nouveau noeud avec les valeurs par defaut */
 void	init_pipe_node(t_pipex *node, t_cmd *cmd, t_shell *shell)
 {
-	// node->cmd = NULL;
-	node->args = NULL;
-	node->envp = convert_env_to_array(shell->env);
+	node->cmd = NULL;
+	node->args = cmd->args;
+	node->envp = shell->env->envp;
 	node->input = -1;
 	node->output = -1;
 	node->pipefd[0] = -1;
@@ -31,10 +31,6 @@ void	init_pipe_node(t_pipex *node, t_cmd *cmd, t_shell *shell)
 	if (!cmd || !cmd->cmds)
 		return ;
 	node->cmd = cmd;
-	node->args = args_split(node->cmd->cmds[0]);
-	if (!node->args)
-		return ;
-	node->envp = convert_env_to_array(shell->env);
 }
 
 /* Creation du nouveau noeud dans la struct pipex */

@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 19:57:41 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/03/22 14:59:17 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/05 11:58:38 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	secure_open(char *filename, int flags)
 
 	if (!filename)
 	{
-		ft_putstr_fd("Pipex:filename is NULL", 2);
+		ft_putstr_fd("Pipex:filename is NULL\n", 2);
 		return (-1);
 	}
 	fd = open(filename, flags, 0644);

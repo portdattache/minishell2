@@ -6,13 +6,13 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 20:24:56 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/02 08:01:39 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/08 13:27:47 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exec(t_pipex *node)
+void	exec(t_pipex *node, t_shell *shell)
 {
 	char	*path;
 
@@ -22,7 +22,10 @@ void	exec(t_pipex *node)
 	{
 		ft_putstr_fd("Command not found: ", 2);
 		ft_putendl_fd(node->args[0], 2);
+		cleanup_shell_env(shell);
+		cleanup_shell_cmd(shell);
 		ft_free_pipeline(node);
+		rl_clear_history();
 		exit(EXIT_FAILURE);
 	}
 	else
@@ -30,8 +33,11 @@ void	exec(t_pipex *node)
 		execve(path, node->args, node->envp);
 		ft_putstr_fd("Execve failed", 2);
 		ft_putendl_fd(node->args[0], 2);
+		cleanup_shell_env(shell);
+		cleanup_shell_cmd(shell);
+		ft_free_pipeline(shell->pipex);
+		rl_clear_history();
 		free(path);
-		ft_free_pipeline(node);
 		exit(EXIT_FAILURE);
 	}
 }
@@ -45,13 +51,15 @@ void	exec_redirection_first(t_pipex *node)
 	}
 	else
 	{
-		if (!node->infile)
-			error_and_exit(node, "Invalid infile");
-		node->input = secure_open(node->infile, O_RDONLY);
-		if (node->input == -1)
-			error_and_exit(node, "Open failed");
-		secure_dup2(node->input, STDIN_FILENO);
-		secure_close(node->input);
+		if (node->infile)
+		{
+			node->input = secure_open(node->infile, O_RDONLY);
+			if (node->input > 0)
+				// error_and_exit(node, "Open failed");
+				secure_close(node->input);
+		}
+		else
+			secure_dup2(node->pipefd[0], STDIN_FILENO);
 		secure_dup2(node->pipefd[1], STDOUT_FILENO);
 		secure_close(node->pipefd[1]);
 		secure_close(node->pipefd[0]);

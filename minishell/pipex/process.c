@@ -6,14 +6,14 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 23:52:51 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/03/22 14:59:02 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/05 16:00:32 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 /* Va gerer les processus en faisant des pipes et des fork */
-void	process_pipeline(t_pipex *head)
+void	process_pipeline(t_pipex *head, t_shell *shell)
 {
 	t_pipex	*node;
 
@@ -24,7 +24,7 @@ void	process_pipeline(t_pipex *head)
 		node->pid = secure_fork();
 		if (node->pid == 0)
 		{
-			exec(node);
+			exec(node, shell);
 			exit(EXIT_SUCCESS);
 		}
 		else

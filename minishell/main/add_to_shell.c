@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   add_env_to_shell.c                                 :+:      :+:    :+:   */
+/*   add_to_shell.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 11:54:41 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/04 12:07:40 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/05 11:14:24 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,22 @@ void	add_env_to_shell(t_shell *shell, char *env_line)
 		last->next = new_env;
 		new_env->prev = last;
 	}
+}
+
+void	add_cmd_to_shell(t_shell *shell, t_cmd *new_cmd)
+{
+	t_cmd	*tmp;
+
+	if (!shell->cmd)
+	{
+		shell->cmd = new_cmd;
+		return ;
+	}
+	tmp = shell->cmd;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new_cmd;
+	new_cmd->prev = tmp;
 }
 
 void	parse_env_var(t_env *env)

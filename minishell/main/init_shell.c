@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 16:37:26 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/04 12:06:59 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:18:47 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,15 @@ void	init_shell(t_shell *shell, char **envp)
 	}
 }
 
-void	init_cmd(t_cmd *cmd, t_shell *shell, char **args)
+t_cmd	*create_cmd_node(t_shell *shell, char **args)
 {
-	if (!cmd || !args)
-		return ;
+	t_cmd	*cmd;
+
+	cmd = malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
 	cmd->cmds = NULL;
-	cmd->args = args;
+	cmd->args = ft_args_split_dup(args);
 	cmd->path = NULL;
 	cmd->pipefd[0] = -1;
 	cmd->pipefd[1] = -1;
@@ -43,25 +46,5 @@ void	init_cmd(t_cmd *cmd, t_shell *shell, char **args)
 	cmd->pid = 0;
 	cmd->prev = NULL;
 	cmd->next = NULL;
-}
-
-void	cleanup_shell(t_shell *shell)
-{
-	t_env	*tmp;
-	t_env	*next;
-
-	tmp = shell->env;
-	while (tmp)
-	{
-		next = tmp->next;
-		if (tmp->key != NULL)
-			free(tmp->key);
-		if (tmp->value != NULL)
-			free(tmp->value);
-		if (tmp->var != NULL)
-			free(tmp->var);
-		free(tmp);
-		tmp = next;
-	}
-	shell->env = NULL;
+	return (cmd);
 }
