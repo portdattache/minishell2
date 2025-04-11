@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:00:22 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/02 11:02:27 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:40:20 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void	add_or_update_env(t_shell *shell, char *key, char *value)
 	new->key = ft_strdup(key);
 	new->value = ft_strdup(value);
 	new->var = ft_strjoin_three(new->key, "=", new->value);
+	new->envp = NULL;
 	new->next = shell->env;
 	shell->env = new;
 }

@@ -1,0 +1,3 @@
+il faut gerer l'interpretation des signaux de porocess, voir pour utiliser une 
+variable globale de type volatile, car elle permettra de contenir a n'importe
+quel moment la valeur du code de sortie de programme
