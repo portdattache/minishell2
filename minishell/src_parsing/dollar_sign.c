@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 22:39:54 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/10 23:10:43 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/11 10:44:52 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,21 @@ char	*expand_vars(char *str, t_env *env)
 {
 	char	*result;
 	int		i;
+	char	quote;
 
 	result = ft_strdup("");
 	i = 0;
+	quote = 0;
 	while (str && str[i])
 	{
-		if (str[i] == '$' && str[i + 1] != '\0')
+		if (!quote && (str[i] == '\'' || str[i] == '\"'))
+			quote = str[i++];
+		else if (quote && str[i] == quote)
+		{
+			quote = 0;
+			i++;
+		}
+		else if (str[i] == '$' && str[i + 1] && (quote != '\''))
 			result = expand_dollar(str, env, result, &i);
 		else
 		{

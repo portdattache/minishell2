@@ -6,36 +6,25 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:07:46 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/10 23:09:38 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/11 10:57:59 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// int	ft_echo(char **args)
-// {
-// 	int		i;
-// 	int		newline;
-// 	char	*value;
+static int	is_n_flag(char *str)
+{
+	int	i;
 
-// 	i = 1;
-// 	newline = 1;
-// 	if (args[i] && ft_strcmp(args[i], "-n") == 0)
-// 	{
-// 		newline = 0;
-// 		i++;
-// 	}
-// 	while (args[i])
-// 	{
-// 		write(1, args[i], ft_strlen(args[i]));
-// 		if (args[i + 1])
-// 			write(1, " ", 1);
-// 		i++;
-// 	}
-// 	if (newline)
-// 		write(1, "\n", 1);
-// 	return (0);
-// }
+	if (!str || str[0] != '-')
+		return (0);
+	i = 1;
+	if (!str[i])
+		return (0);
+	while (str[i] == 'n')
+		i++;
+	return (str[i] == '\0');
+}
 
 int	ft_echo(t_cmd *cmd, char **envp)
 {
@@ -51,7 +40,7 @@ int	ft_echo(t_cmd *cmd, char **envp)
 		ft_printf("\n");
 		return (1);
 	}
-	if (cmd->args[i] && ft_strcmp(cmd->args[i], "-n") == 0)
+	while (cmd->args[i] && is_n_flag(cmd->args[i]))
 	{
 		newline = 0;
 		i++;
