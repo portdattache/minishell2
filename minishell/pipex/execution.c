@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 20:24:56 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/08 13:27:47 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/12 11:20:33 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,7 @@ void	exec(t_pipex *node, t_shell *shell)
 	{
 		ft_putstr_fd("Command not found: ", 2);
 		ft_putendl_fd(node->args[0], 2);
-		cleanup_shell_env(shell);
-		cleanup_shell_cmd(shell);
-		ft_free_pipeline(node);
+		main_cleaner(shell);
 		rl_clear_history();
 		exit(EXIT_FAILURE);
 	}
@@ -33,9 +31,7 @@ void	exec(t_pipex *node, t_shell *shell)
 		execve(path, node->args, node->envp);
 		ft_putstr_fd("Execve failed", 2);
 		ft_putendl_fd(node->args[0], 2);
-		cleanup_shell_env(shell);
-		cleanup_shell_cmd(shell);
-		ft_free_pipeline(shell->pipex);
+		main_cleaner(shell);
 		rl_clear_history();
 		free(path);
 		exit(EXIT_FAILURE);
@@ -55,7 +51,6 @@ void	exec_redirection_first(t_pipex *node)
 		{
 			node->input = secure_open(node->infile, O_RDONLY);
 			if (node->input > 0)
-				// error_and_exit(node, "Open failed");
 				secure_close(node->input);
 		}
 		else

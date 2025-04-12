@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_spe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: broboeuf <broboeuf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 14:12:16 by broboeuf          #+#    #+#             */
-/*   Updated: 2025/04/04 16:42:47 by broboeuf         ###   ########.fr       */
+/*   Updated: 2025/04/12 12:46:20 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 bool	is_space(char c)
 {
-	return (c == ' ' || c == '\n' || c == '\r' || c == '\f'
-		|| c == '\t' || c == '\v');
+	return (c == ' ' || c == '\n' || c == '\r' || c == '\f' || c == '\t'
+		|| c == '\v');
 }
 
 bool	handle_special_case(t_token **begin, char *symbol, t_token_type type)
@@ -58,6 +58,22 @@ bool	add_special(t_token **begin, char **cmd)
 {
 	t_token_type	spe;
 	int				i;
+
+	spe = (t_token_type)is_special(*cmd);
+	if (spe == 0)
+		return (false);
+	i = 0;
+	if (!handle_special_loop(begin, spe, &i))
+		return (false);
+	if (spe == HEREDOC || spe == APPEND)
+		*cmd += 2;
+	else
+		(*cmd)++;
+	return (true);
+}
+
+bool	handle_special_loop(t_token **begin, t_token_type spe, int *i)
+{
 	char			*symbols[5];
 	t_token_type	types[5];
 
@@ -71,20 +87,12 @@ bool	add_special(t_token **begin, char **cmd)
 	types[2] = INPUT;
 	types[3] = OUTPUT;
 	types[4] = PIPE;
-	spe = (t_token_type)is_special(*cmd);
-	if (spe == 0)
-		return (false);
-	i = 0;
-	while (i < 5)
+	while (*i < 5)
 	{
-		if (spe == types[i]
-			&& !handle_special_case(begin, symbols[i], types[i]))
+		if (spe == types[*i] && !handle_special_case(begin, symbols[*i],
+				types[*i]))
 			return (false);
-		i++;
+		(*i)++;
 	}
-	if (spe == HEREDOC || spe == APPEND)
-		*cmd += 2;
-	else
-		(*cmd)++;
 	return (true);
 }

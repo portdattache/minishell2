@@ -19,6 +19,7 @@ SRC = src_built_in/cd.c\
 	  src_parsing/token_spe.c\
 	  src_parsing/dollar_sign.c\
 	  src_executing/signals.c\
+	  src_executing/prompt_loop.c\
 	  pipex/free.c\
 	  pipex/init_pipex.c\
 	  pipex/execution.c\

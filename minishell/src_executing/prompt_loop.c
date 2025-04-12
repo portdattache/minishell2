@@ -1,35 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prompt.c                                           :+:      :+:    :+:   */
+/*   prompt_loop.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/20 17:01:22 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/02 08:03:51 by bcaumont         ###   ########.fr       */
+/*   Created: 2025/04/12 11:07:12 by bcaumont          #+#    #+#             */
+/*   Updated: 2025/04/12 11:16:18 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	prompt(t_shell *shell)
+void	prompt_loop(t_shell *shell)
 {
+	t_cmd	*cmd;
+	char	*line;
+	char	**args;
+
 	while (1)
 	{
-		shell->input_terminal = readline("\033[31mminishell> \033[0m");
-		if (!shell->input_terminal)
+		line = readline(PROMPT);
+		if (!line)
+			break ;
+		if (*line)
+			add_history(line);
+		args = args_split(line);
+		if (!args)
 		{
-			printf("exit\n");
-			exit(0);
+			free(line);
+			continue ;
 		}
-		if (*shell->input_terminal)
-			add_history(shell->input_terminal);
-		printf("Commande entree: %s\n", shell->input_terminal);
-		if (strcmp("exit", shell->input_terminal) == 0)
-		{
-			free(shell->input_terminal);
-			exit(1);
-		}
-		free(shell->input_terminal);
+		cleanup_shell_cmd(shell);
+		cmd = create_cmd_node(shell, args);
+		ft_free_split(args);
+		add_cmd_to_shell(shell, cmd);
+		exec_direction(shell, line);
 	}
 }

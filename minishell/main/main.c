@@ -6,13 +6,13 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 17:09:48 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/10 22:02:17 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/12 11:15:17 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	main_cleaner(t_shell *shell)
+void	main_cleaner(t_shell *shell)
 {
 	if (shell->env != NULL)
 		cleanup_shell_env(shell);
@@ -23,7 +23,7 @@ static void	main_cleaner(t_shell *shell)
 	rl_clear_history();
 }
 
-static void	exec_direction(t_shell *shell, char *line)
+void	exec_direction(t_shell *shell, char *line)
 {
 	if (shell->cmd->args && is_builtin(shell->cmd->args[0]))
 		execute_builtin(shell->cmd->args, shell);
@@ -35,32 +35,13 @@ static void	exec_direction(t_shell *shell, char *line)
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell	shell;
-	t_cmd	*cmd;
-	char	*line;
-	char	**args;
 
-	args = NULL;
 	(void)argc;
 	(void)argv;
 	ft_bzero(&shell, sizeof(t_shell));
 	init_shell(&shell, envp);
 	signal(SIGINT, sigint_handler);
-	while (1)
-	{
-		line = readline(PROMPT);
-		if (!line)
-			break ;
-		if (*line)
-			add_history(line);
-		args = args_split(line);
-		if (!args)
-			free(line);
-		cleanup_shell_cmd(&shell);
-		cmd = create_cmd_node(&shell, args);
-		ft_free_split(args);
-		add_cmd_to_shell(&shell, cmd);
-		exec_direction(&shell, line);
-	}
+	prompt_loop(&shell);
 	main_cleaner(&shell);
 	return (0);
 }

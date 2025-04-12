@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:07:46 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/11 10:57:59 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/12 10:57:09 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,6 @@ int	ft_echo(t_cmd *cmd, char **envp)
 	(void)envp;
 	i = 1;
 	newline = 1;
-	if (!cmd || !cmd->args)
-	{
-		ft_printf("\n");
-		return (1);
-	}
 	while (cmd->args[i] && is_n_flag(cmd->args[i]))
 	{
 		newline = 0;

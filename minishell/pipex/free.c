@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 19:59:03 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/08 12:08:56 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/12 11:20:17 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	ft_perror(char *msg)
 {
 	perror(msg);
 	exit(EXIT_FAILURE);
-	// return ;
 }
 
 void	error_and_exit(t_pipex *node, char *msg)
@@ -39,7 +38,6 @@ void	ft_free_pipeline(t_pipex *head)
 	while (head)
 	{
 		tmp = head->next;
-		// cleanup_head(head);
 		free(head);
 		head = tmp;
 	}

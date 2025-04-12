@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 14:47:10 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/10 23:04:09 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/12 12:45:59 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,10 +116,15 @@ void				sigint_handler(int sig);
 char				*append_char(char *str, char c);
 char				*get_env_value_from_list(t_env *env, char *name);
 char				*expand_vars(char *str, t_env *env);
+void				main_cleaner(t_shell *shell);
+void				prompt_loop(t_shell *shell);
+void				exec_direction(t_shell *shell, char *line);
 char				*expand_dollar(char *str, t_env *env, char *res, int *i);
 
 /* Topings ~ Tokens */
 void				skip_spaces(char **cmd);
+bool				handle_special_loop(t_token **begin, t_token_type spe,
+						int *i);
 bool				free_and_return_false(t_token **begin);
 int					handle_quotes(char *cmd, int *i, int *quotes);
 int					get_token_length(char *cmd, int *quotes);

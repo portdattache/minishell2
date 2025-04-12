@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 18:55:23 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/09 16:03:08 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/12 11:02:53 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	execute_builtin(char **args, t_shell *shell)
 
 int	is_builtin(char *cmd)
 {
+	if (!cmd)
+		return (0);
 	if (ft_strcmp(cmd, "echo") == 0)
 		return (1);
 	if (ft_strcmp(cmd, "env") == 0)
