@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 22:39:54 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/11 10:44:52 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/16 11:03:07 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,13 @@ char	*expand_vars(char *str, t_env *env)
 	return (result);
 }
 
-char	*expand_dollar(char *str, t_env *env, char *res, int *i)
+char	*expand_variable_from_env(char *str, t_env *env, char *res, int *i)
 {
 	char	*var_name;
 	char	*value;
 	int		start;
 	char	*tmp;
 
-	(*i)++;
 	start = *i;
 	while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
 		(*i)++;
@@ -90,4 +89,12 @@ char	*expand_dollar(char *str, t_env *env, char *res, int *i)
 	}
 	free(var_name);
 	return (res);
+}
+
+char	*expand_dollar(char *str, t_env *env, char *res, int *i)
+{
+	(*i)++;
+	if (str[*i] == '?')
+		return (expand_exit_status(res, i));
+	return (expand_variable_from_env(str, env, res, i));
 }

@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:07:46 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/12 10:57:09 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/15 17:35:39 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,10 @@ static int	is_n_flag(char *str)
 	return (str[i] == '\0');
 }
 
-int	ft_echo(t_cmd *cmd, char **envp)
+static void	print_echo_args(t_cmd *cmd, int i)
 {
-	int		i;
-	int		newline;
 	char	*expand;
 
-	(void)envp;
-	i = 1;
-	newline = 1;
-	while (cmd->args[i] && is_n_flag(cmd->args[i]))
-	{
-		newline = 0;
-		i++;
-	}
 	while (cmd->args[i])
 	{
 		expand = expand_vars(cmd->args[i], cmd->env);
@@ -49,6 +39,22 @@ int	ft_echo(t_cmd *cmd, char **envp)
 			ft_printf(" ");
 		i++;
 	}
+}
+
+int	ft_echo(t_cmd *cmd, char **envp)
+{
+	int	i;
+	int	newline;
+
+	(void)envp;
+	i = 1;
+	newline = 1;
+	while (cmd->args[i] && is_n_flag(cmd->args[i]))
+	{
+		newline = 0;
+		i++;
+	}
+	print_echo_args(cmd, i);
 	if (newline)
 		ft_printf("\n");
 	return (0);

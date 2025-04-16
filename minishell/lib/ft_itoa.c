@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 15:55:54 by bcaumont          #+#    #+#             */
-/*   Updated: 2024/10/26 16:04:35 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/15 17:50:59 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,26 +29,26 @@ static int	ft_numlen(int n)
 
 char	*ft_itoa(int n)
 {
-	char	*str;
+	long	nbr;
 	int		len;
-	long	nb;
+	int		sign;
+	char	*str;
 
-	nb = n;
-	len = ft_numlen(nb);
-	str = (char *)malloc(sizeof(char) * (len + 1));
+	nbr = n;
+	len = ft_numlen(nbr);
+	sign = (n < 0);
+	if (n < 0)
+		n = -n;
+	str = malloc(sizeof(char) * (len + 1));
 	if (!str)
 		return (NULL);
 	str[len] = '\0';
-	if (nb < 0)
+	while (--len >= 0)
 	{
-		str[0] = '-';
-		nb = -nb;
-	}
-	while (len > 0 && str[len - 1] != '-')
-	{
-		str[len - 1] = (nb % 10) + '0';
-		nb = nb / 10;
-		len--;
+		str[len] = n % 10 + '0';
+		n /= 10;
+		if (len == 0 && sign)
+			str[len] = '-';
 	}
 	return (str);
 }

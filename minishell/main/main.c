@@ -6,11 +6,13 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 17:09:48 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/12 11:15:17 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/15 15:53:40 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+volatile sig_atomic_t	g_status = 0;
 
 void	main_cleaner(t_shell *shell)
 {
@@ -40,7 +42,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	ft_bzero(&shell, sizeof(t_shell));
 	init_shell(&shell, envp);
-	signal(SIGINT, sigint_handler);
+	setup_signals();
 	prompt_loop(&shell);
 	main_cleaner(&shell);
 	return (0);
