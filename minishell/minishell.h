@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 14:47:10 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/04/16 11:04:16 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/04/17 13:09:08 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ typedef struct s_shell
 	t_env						*env;
 	t_cmd						*cmd;
 	t_pipex						*pipex;
+	t_token						*token;
 	int							exit_status;
 }								t_shell;
 
