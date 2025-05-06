@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 16:09:23 by garside           #+#    #+#             */
-/*   Updated: 2025/05/02 13:11:27 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/05/05 16:27:48 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,13 +85,10 @@ int	exec_line(t_data *data)
 {
 	t_cmd	*cmd_list;
 
-	if (has_pipe(data->token))
-	{
-		cmd_list = build_cmd_list(data->token, data->env);
-		if (!cmd_list)
-			return (1);
-		return (exec_pipeline(cmd_list));
-	}
-	else
+	if (!has_pipe(data->token))
 		return (which_command(data));
+	cmd_list = build_cmd_list(data->token, data->env);
+	if (!cmd_list)
+		return (1);
+	return (exec_pipeline(cmd_list));
 }

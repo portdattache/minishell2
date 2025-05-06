@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_utils_1.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garside <garside@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 13:45:23 by garside           #+#    #+#             */
-/*   Updated: 2025/04/30 13:54:51 by garside          ###   ########.fr       */
+/*   Updated: 2025/05/06 15:56:38 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ void	free_data(t_data *data)
 
 char	**ft_get_cmd(t_data *data)
 {
-	t_token		*i;
-	char		**cmd;
-	int			len;
-	int			j;
+	t_token	*i;
+	char	**cmd;
+	int		len;
+	int		j;
 
 	len = 0;
 	i = data->token;

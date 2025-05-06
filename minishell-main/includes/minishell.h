@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:16:35 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/05/03 13:35:10 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:51:16 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,5 +170,21 @@ int								ft_export(t_data *data);
 void							sort(char **tmp);
 t_env							*init_export_list(char **env);
 int								ft_unset(t_data *data);
+
+// ft_pipe
+void							exec_child(t_cmd *cmd);
+int								exec_pipeline(t_cmd *cmd_list);
+void							close_parent_pipes(t_cmd *cmd);
+int								wait_all(t_cmd *cmd);
+int								has_pipe(t_token *token);
+t_cmd							*cmd_new(char **args, t_env *env);
+void							init_cmd(t_cmd *cmd, char **args);
+char							*join_env(char *key, char *value);
+char							**env_to_envp(t_env *env);
+void							add_cmd_back(t_cmd **head, t_cmd *new);
+char							**collect_args_until_pipe(t_token **token);
+t_cmd							*build_cmd_list(t_token *token, t_env *env);
+void							free_cmd(t_data *data);
+void							main_cleaner(t_data *data);
 
 #endif

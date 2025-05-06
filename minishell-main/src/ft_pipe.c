@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 13:14:43 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/05/03 15:40:24 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:08:59 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,21 @@ void	exec_child(t_cmd *cmd)
 		close(cmd->pipefd[0]);
 		close(cmd->pipefd[1]);
 	}
-	execve(cmd->path, cmd->cmds, env_to_envp(cmd->env));
-	perror("execve");
-	exit(127);
+	else if (cmd->pipefd[0] != -1)
+		close(cmd->pipefd[0]);
+	if (execve(cmd->path, cmd->cmds, env_to_envp(cmd->env)) == -1)
+	{
+		perror("execve");
+		free_cmd(cmd);
+		exit(127);
+	}
 }
 
 void	close_parent_pipes(t_cmd *cmd)
 {
-	if (cmd->prev)
+	if (cmd->prev && cmd->prev->pipefd[0] != -1)
 		close(cmd->prev->pipefd[0]);
-	if (cmd->next)
+	if (cmd->pipefd[1] != -1)
 		close(cmd->pipefd[1]);
 }
 
@@ -87,7 +92,7 @@ int	wait_all(t_cmd *cmd)
 	return (exit_code);
 }
 
-t_cmd	*buil_cmd_list(t_token *token, t_env *env)
+t_cmd	*build_cmd_list(t_token *token, t_env *env)
 {
 	t_cmd	*head;
 	t_cmd	*curr;
@@ -169,7 +174,7 @@ t_cmd	*cmd_new(char **args, t_env *env)
 		g_status = 1;
 		return (NULL);
 	}
-	create_cmd(args);
+	init_cmd(cmd, args);
 	envp = env_to_envp(env);
 	cmd->path = find_cmd_path(args[0], envp);
 	free_split(envp);
@@ -182,23 +187,17 @@ t_cmd	*cmd_new(char **args, t_env *env)
 	return (cmd);
 }
 
-t_cmd	*create_cmd(char **args)
+void	init_cmd(t_cmd *cmd, char **args)
 {
-	t_cmd	*cmd;
-
-	cmd = malloc(sizeof(t_cmd));
-	if (!cmd)
-		return (NULL);
-	cmd->cmds = args[0];
+	cmd->cmds = args;
 	cmd->args = args;
-	cmd->infile = -1;
-	cmd->outfile = -1;
+	cmd->infile = NULL;
+	cmd->outfile = NULL;
 	cmd->pid = -1;
 	cmd->next = NULL;
 	cmd->prev = NULL;
 	cmd->pipefd[0] = -1;
 	cmd->pipefd[1] = -1;
-	rteurn(cmd);
 }
 
 void	add_cmd_back(t_cmd **head, t_cmd *new)

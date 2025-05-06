@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garside <garside@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 19:11:06 by garside           #+#    #+#             */
-/*   Updated: 2025/04/29 19:11:28 by garside          ###   ########.fr       */
+/*   Updated: 2025/05/06 15:56:32 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,6 @@ int	ft_exit(t_data *data)
 	code = ft_atoi(data->token->next->value);
 	free_data(data);
 	ft_printf("exit\n");
-	exit (code);
+	exit(code);
 	return (0);
 }

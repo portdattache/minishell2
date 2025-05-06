@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:20:10 by garside           #+#    #+#             */
-/*   Updated: 2025/05/02 11:40:32 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:51:12 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,44 @@ void	read_prompt(t_data *data)
 	}
 }
 
+void	main_cleaner(t_data *data)
+{
+	if (data->cmd != NULL)
+		free_cmd(data);
+	if (data->env != NULL)
+		free_env_list(data->env);
+	if (data->export != NULL)
+		free_env_list(data->export);
+	if (data->token != NULL)
+		free_token(data->token);
+}
+
+void	free_cmd(t_data *data)
+{
+	t_cmd	*tmp;
+	t_cmd	*next;
+
+	tmp = data->cmd;
+	if (data->cmd != NULL)
+	{
+		tmp = data->cmd;
+		while (tmp)
+		{
+			next = tmp->next;
+			if (tmp->args != NULL)
+				free_split(tmp->args);
+			if (tmp->cmds != NULL)
+				free_split(tmp->cmds);
+			if (tmp->path != NULL)
+				free(tmp->path);
+			free(tmp);
+			tmp = next;
+		}
+		data->cmd = NULL;
+	}
+	return ;
+}
+
 int	main(int ac, char **av, char **env)
 {
 	t_data	data;
@@ -125,8 +163,7 @@ int	main(int ac, char **av, char **env)
 	data.last_status = 0;
 	init_signal();
 	read_prompt(&data);
-	free_env_list(data.env);
-	free_env_list(data.export);
+	main_cleaner(&data);
 	rl_clear_history();
-	return (data.last_status);
+	return (g_status);
 }
