@@ -6,12 +6,12 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:16:35 by bcaumont          #+#    #+#             */
-/*   Updated: 2025/05/09 11:55:28 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:10:34 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIST_H
-# define LIST_H
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
 # include "../octolib/includes/libft.h"
 # include <readline/history.h>
@@ -32,12 +32,12 @@ typedef enum e_token_type
 	REDIRECTION_OUT,
 	HEREDOC,
 	APPEND,
-}								TokenType;
+}								t_TokenType;
 
 typedef struct s_token
 {
 	char						*value;
-	TokenType					type;
+	t_TokenType					type;
 	struct s_token				*next;
 }								t_token;
 
@@ -95,7 +95,7 @@ void							skip_whitespace(const char *input, int *i);
 // lexer1
 void							free_one_token(t_token *token);
 void							free_token(t_token *head);
-t_token							*new_token(char *value, TokenType type);
+t_token							*new_token(char *value, t_TokenType type);
 char							*handle_error_code(t_data *data, char *value,
 									int *i);
 void							add_token_to_list(t_token **head,
