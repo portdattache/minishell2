@@ -3,17 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garside <garside@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 17:20:10 by garside           #+#    #+#             */
-/*   Updated: 2025/05/07 12:12:02 by garside          ###   ########.fr       */
+/*   Updated: 2025/05/23 13:50:37 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../includes/minishell.h"
+#include "../octolib/includes/libft.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "../includes/minishell.h"
-#include "../octolib/includes/libft.h" 
+
+volatile sig_atomic_t	g_status = 0;
 
 t_env	*init_env_list(char **env)
 {
@@ -93,7 +95,7 @@ void	read_prompt(t_data *data)
 	while (1)
 	{
 		data->token = NULL;
-		data->input = readline("minishell> ");
+		data->input = readline(PROMPT);
 		if (!data->input)
 		{
 			ft_printf("exit\n");
@@ -103,7 +105,9 @@ void	read_prompt(t_data *data)
 		{
 			add_history(data->input);
 			if (parse(data) == 0)
-				data->last_status = exec_line(data);
+				g_status = exec_line(data, data->cmd_list);
+			if (data->cmd_list)
+				free_cmd_list(data);
 			if (data->token)
 				free_token(data->token);
 		}
@@ -120,11 +124,11 @@ int	main(int ac, char **av, char **env)
 	data.envp = env;
 	data.env = init_env_list(env);
 	data.export = init_export_list(env);
-	data.last_status = 0;
 	init_signal();
+	disable_echoctl();
 	read_prompt(&data);
 	free_env_list(data.env);
 	free_env_list(data.export);
 	rl_clear_history();
-	return (data.last_status);
+	return (g_status);
 }

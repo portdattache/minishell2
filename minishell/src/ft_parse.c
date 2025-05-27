@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garside <garside@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 14:13:50 by garside           #+#    #+#             */
-/*   Updated: 2025/05/06 18:45:52 by garside          ###   ########.fr       */
+/*   Updated: 2025/05/23 12:21:24 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../includes/minishell.h"
 #include "../octolib/includes/libft.h"
-#include "../includes/minishell.h" 
 
 t_env	*env_new(char *name, char *value)
 {
@@ -77,29 +77,12 @@ t_token	*ft_lexer(t_data *data)
 	return (head);
 }
 
-int	parse(t_data *data)
+void	print_tokens(t_data *data)
 {
-	t_token	*first;
-
-	if (!data->input)
-		return (1);
-	data->token = ft_lexer(data);
-	if (!data->token)
-		return (1);
-	first = data->token;
-	if (data->token)
+	while (data->token)
 	{
-		if (first->type == 1 || first->type == 2 || first->type == 3
-			|| first->type == 4 || first->type == 5)
-			return (1);
+		printf("token value: %s type %d\n", data->token->value,
+			data->token->type);
+		data->token = data->token->next;
 	}
-	while (first && first->next)
-		first = first->next;
-	if (first && first->type == 1)
-	{
-		data->last_status = 2;
-		printf("minishell: syntax error near unexpected token `|`\n");
-		return (1);
-	}
-	return (0);
 }

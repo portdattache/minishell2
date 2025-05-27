@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garside <garside@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 18:42:46 by garside           #+#    #+#             */
-/*   Updated: 2025/04/30 13:56:36 by garside          ###   ########.fr       */
+/*   Updated: 2025/05/23 11:44:22 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,33 +24,29 @@ static int	is_n_flag(char *str)
 	return (str[i] == '\0');
 }
 
-static void	print_args(t_token *token)
+int	ft_echo(t_data *data, t_cmd *cmd)
 {
-	while (token)
-	{
-		ft_printf("%s", token->value);
-		if (token->next)
-			ft_printf(" ");
-		token = token->next;
-	}
-}
+	int	newline;
+	int	i;
 
-int	ft_echo(t_data *data)
-{
-	int		newline;
-	t_token	*token;
-
-	if (!data->token->next)
-		return (ft_printf("\n"), 1);
-	token = data->token->next;
+	(void)data;
 	newline = 1;
-	while (token && is_n_flag(token->value))
+	i = 1;
+	if (!cmd || !cmd->args)
+		return (printf("\n"), 0);
+	while (cmd->args[i] && is_n_flag(cmd->args[i]))
 	{
 		newline = 0;
-		token = token->next;
+		i++;
 	}
-	print_args(token);
+	while (cmd->args[i])
+	{
+		printf("%s", cmd->args[i]);
+		if (cmd->args[i + 1])
+			printf(" ");
+		i++;
+	}
 	if (newline)
-		ft_printf("\n");
+		printf("\n");
 	return (0);
 }

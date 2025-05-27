@@ -3,25 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: broboeuf <broboeuf@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 16:20:24 by garside           #+#    #+#             */
-/*   Updated: 2025/05/07 20:06:29 by broboeuf         ###   ########.fr       */
+/*   Updated: 2025/05/27 14:12:24 by bcaumont         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "../octolib/includes/libft.h"
-# include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdbool.h>
-# include <stdlib.h>
+# include <sys/stat.h>
+# include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
-
+# define SUCCESS 0
+# define FAIL 1
+# define CODE_FAIL 1
+# define CODE_SUCCESS 0
+# define PIPE_READ 0
+# define PIPE_WRITE 1
 # define PROMPT "\033[1;32mminishell$> \033[0m"
 
 extern volatile sig_atomic_t	g_status;
@@ -51,22 +56,31 @@ typedef struct s_env
 	struct s_env				*prev;
 }								t_env;
 
+typedef struct s_redir
+{
+	char						*file;
+	int							type;
+	struct s_redir				*next;
+}								t_redir;
+
+typedef struct s_exec_fd
+{
+	int							saved_stdin;
+	int							saved_stdout;
+	int							prev_fd;
+}								t_exec_fd;
+
 typedef struct s_cmd
 {
-	char						**cmds;
 	char						**args;
-	char						**cmd_param;
 	char						*path;
-	int							pipefd[2];
-	t_env						*env;
-	pid_t						pid;
-	int							append_out;
-	int							heredoc;
-	int							infile;
-	int							outfile;
-	bool						skip_cmd;
-	struct s_cmd				*prev;
+	t_redir						*infile;
+	t_redir						*outfile;
+	int							prev_fd;
+	int							here_doc_mode;
+	int							pipe_fd[2];
 	struct s_cmd				*next;
+	t_exec_fd					*fds;
 }								t_cmd;
 
 typedef struct s_data
@@ -76,9 +90,13 @@ typedef struct s_data
 	t_env						*export;
 	char						**envp;
 	t_token						*token;
-	t_cmd						*cmd;
+	t_cmd						*cmd_list;
+	int							token_count;
 	int							last_status;
 }								t_data;
+
+// signaux
+void							reset_signals_child(void);
 
 // parse
 t_env							*env_new(char *name, char *value);
@@ -131,10 +149,19 @@ char							*append_error_code(t_data *data, char *extract,
 
 // exec
 char							*get_cmd_path(t_data *data, char **cmd);
-void							exec_child_process(t_data *data);
-int								ft_shell(t_data *data);
-int								which_command(t_data *data);
-int								exec_line(t_data *data);
+void							exec_child_process(t_data *data,
+									t_exec_fd *fds);
+int								ft_shell(t_data *data, int stdin, int stdout);
+int								which_command(t_data *data, t_cmd *cmd,
+									int stdin, int stdout);
+int								exec_line(t_data *data, t_cmd *cmd);
+
+// parse
+void							print_cmds(t_cmd *cmd);
+t_cmd							*parse_tokens(t_data *data);
+void							add_arg(t_cmd *cmd, char *value);
+t_cmd							*new_cmd_node(void);
+void							free_cmd_list(t_data *data);
 
 // exec1
 void							free_data(t_data *data);
@@ -163,41 +190,67 @@ void							init_signal(void);
 int								ft_pwd(void);
 int								ft_cd(t_data *data);
 int								ft_env(t_data *data);
-int								ft_echo(t_data *data);
-int								ft_exit(t_data *data);
+int								ft_echo(t_data *data, t_cmd *cmd);
+int								ft_exit(t_data *data, t_cmd *cmd,
+									t_exec_fd *fds);
 int								ft_isalldigit(char *str);
 
 // ryew
-int								ft_executables(t_data *data);
+int								ft_executables(t_data *data, t_cmd *cmd,
+									t_exec_fd *fds);
 int								ft_export(t_data *data);
 void							sort(char **tmp);
 t_env							*init_export_list(char **env);
 int								ft_unset(t_data *data);
 char							*find_cmd_path(char *cmd, t_data *data);
 
-/* ---------- Redirections ---------- */
-int								opening(t_data *data, char *filename,
-									t_TokenType type);
-bool							redir_in(t_cmd *cmd, t_token *token,
-									t_data *data);
-bool							all_redir_in(t_cmd *cmd, t_token *start,
-									t_data *data);
-bool							redir_out(t_cmd *cmd, t_token *token,
-									t_data *data);
-bool							all_redir_out(t_cmd *cmd, t_token *start,
-									t_data *data);
-bool							add_argument(char ***cmd_args, int *index,
-									char *value);
-bool							replace_dollar(char **line, t_data *data);
-bool							is_valid_argument(t_token *token);
-void							cleanup_arguments(char **args, int count);
-bool							process_token(t_data *data, t_token **current);
-int								handle_heredoc(t_data *data, char *delimiter);
-bool							process_token(t_data *data, t_token **token);
-t_cmd							*init_new_cmd(t_data *data);
-void							setup_pipe(t_cmd *cmd);
-t_cmd							*get_last_cmd(t_cmd *cmd);
-char							**parse_command_arguments(t_data *data,
-									t_token *token);
+// pipe
+int								ft_process(t_data *data, t_cmd *cmd, int stdin,
+									int stdout);
+bool							is_builtin(char *cmd);
+void							exec_child(t_data *data, t_cmd *cmd, int stdin,
+									int stdout);
+void							ft_exit_exec(int code, t_data *data,
+									t_cmd *cmd);
+int								run_builtin(t_data *data, t_cmd *cmd, int stdin,
+									int stdout);
+int								redirect_management(t_cmd *cmd, t_exec_fd *fds);
+void							safe_close(int fd);
+
+// pipe utils
+int								open_infile(char *str);
+int								last_infile(t_cmd *cmd);
+int								manag_infile(t_cmd *cmd);
+int								open_outfile(char *file, t_TokenType mode);
+int								last_outfile(t_cmd *cmd);
+int								manag_outfile(t_cmd *cmd, int *pipe_fd);
+
+// error message
+void							command_not_found(char *cmd);
+void							no_such_file_or_directory(char *cmd);
+void							permission_denied(char *file);
+void							error_message(char *str);
+void							is_a_directory(char *str);
+int								set_fd_cloexec(int fd);
+
+// heredoc
+void							made_new_file(int *fd, char **name);
+void							fill_here_doc_file(int fd, char *delimitor);
+char							*get_here_doc(char *str);
+
+void							disable_echoctl(void);
+int								ft_charnull(t_cmd *cmd);
+char							*ft_strjoin_three(char *s1, char *s2, char *s3);
+int								handle_single_command(t_data *data, t_cmd *cmd);
+pid_t							handle_pipeline(t_data *data, t_cmd *cmd);
+void							wait_for_pipeline(pid_t last_pid, t_data *data);
+int								init_pipe_if_needed(t_cmd *cmd);
+void							update_fds_after_process(t_cmd *cmd);
+int								handle_exec(t_data *data, t_cmd *cmd);
+int								prepare_cmd_path(t_data *data, t_cmd *cmd);
+void							print_cmd_redirs(t_cmd *cmd);
+void							print_cmd_args(char **args);
+void							print_cmds(t_cmd *cmd);
+int								check_tokens_validity(t_token *token);
 
 #endif
