@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parce_util.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
+/*   By: broboeuf <broboeuf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 08:47:16 by garside           #+#    #+#             */
-/*   Updated: 2025/06/01 21:10:44 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/06/02 01:00:42 by broboeuf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,61 +122,4 @@ void	add_redir(t_redir **redir_list, char *filename, int type)
 			tmp = tmp->next;
 		tmp->next = new_node;
 	}
-}
-
-t_cmd	*parse_tokens(t_data *data)
-{
-	t_cmd	*head;
-	t_cmd	*curr;
-	t_token	*token;
-	int		skip_next_word;
-
-	head = NULL;
-	curr = NULL;
-	token = data->token;
-	skip_next_word = 0;
-	while (token)
-	{
-		if (!curr)
-		{
-			curr = new_cmd_node();
-			if (!head)
-				head = curr;
-		}
-		if (skip_next_word)
-		{
-			skip_next_word = 0;
-			token = token->next;
-			continue ;
-		}
-		if (token->type == WORD)
-			add_arg(curr, token->value);
-		else if (token->type == REDIRECTION_IN && token->next)
-		{
-			add_redir(&curr->infile, token->next->value, REDIRECTION_IN);
-			skip_next_word = 1;
-		}
-		else if (token->type == REDIRECTION_OUT && token->next)
-		{
-			add_redir(&curr->outfile, token->next->value, REDIRECTION_OUT);
-			skip_next_word = 1;
-		}
-		else if (token->type == APPEND && token->next)
-		{
-			add_redir(&curr->outfile, token->next->value, APPEND);
-			skip_next_word = 1;
-		}
-		else if (token->type == HEREDOC && token->next)
-		{
-			add_redir(&curr->infile, token->next->value, HEREDOC);
-			skip_next_word = 1;
-		}
-		else if (token->type == PIPE)
-		{
-			curr->next = new_cmd_node();
-			curr = curr->next;
-		}
-		token = token->next;
-	}
-	return (head);
 }

@@ -6,7 +6,7 @@
 /*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 19:49:33 by garside           #+#    #+#             */
-/*   Updated: 2025/06/01 21:40:50 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/06/02 01:10:51 by broboeuf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ void	fill_here_doc_file(int fd, char *delimitor)
 		if (str == NULL)
 		{
 			ft_printf("bash: warning: here-document delimited"\
-						" by end-of-file (wanted `%s')\n",\
-						delimitor);
+						" by end-of-file (wanted `%s')\n"\
+						, delimitor);
 			break ;
 		}
 		if (ft_strcmp(str, delimitor) == 0)

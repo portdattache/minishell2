@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
+/*   By: broboeuf <broboeuf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 16:20:24 by garside           #+#    #+#             */
-/*   Updated: 2025/06/01 21:52:12 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/06/02 01:04:29 by broboeuf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,6 +226,9 @@ void							safe_close(int fd);
 int								redirect_management(t_cmd *cmd, int prev_fd);
 
 // pipe utils
+void							add_redir(t_redir **redir_list, char *filename,
+									int type);
+
 int								open_infile(char *str);
 int								last_infile(t_cmd *cmd);
 int								manag_infile(t_cmd *cmd, int prev_fd);
