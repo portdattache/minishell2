@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_utils_1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
+/*   By: broboeuf <broboeuf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:05:40 by garside           #+#    #+#             */
-/*   Updated: 2025/06/01 21:04:36 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/06/02 01:30:21 by broboeuf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,16 @@ int	ft_is_valid(char *str)
 {
 	int	i;
 
-	i = 0;
-	if (!ft_isalpha(str[0]) && str[0] != '_')
-		return (1);
-	while (str[i])
+	if (!str || (!ft_isalpha(str[0]) && str[0] != '_'))
+		return (0);
+	i = 1;
+	while (str[i] && str[i] != '=')
 	{
-		if (ft_isalnum(str[i]) && str[i] == '_')
-			return (1);
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (0);
 		i++;
 	}
-	return (0);
+	return (1);
 }
 
 int	check_name(char *str, t_env *node, char *content)

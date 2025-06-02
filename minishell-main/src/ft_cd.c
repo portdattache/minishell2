@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
+/*   By: broboeuf <broboeuf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 17:24:03 by garside           #+#    #+#             */
-/*   Updated: 2025/06/01 21:07:23 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/06/02 02:59:07 by broboeuf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	update_oldpwd_and_chdir(t_data *data, char *path)
 		return (ft_putstr_fd("pwd failed\n", 2), 1);
 	ft_replace_in_env(data, "OLDPWD", cwd);
 	if (chdir(path) == -1)
-		return (ft_putstr_fd("chdir failed\n", 2), 1);
+		return (1);
 	return (0);
 }
 

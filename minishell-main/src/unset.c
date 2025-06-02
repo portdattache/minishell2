@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
+/*   By: broboeuf <broboeuf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 19:06:08 by garside           #+#    #+#             */
-/*   Updated: 2025/06/01 21:04:56 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/06/02 02:45:12 by broboeuf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	ft_unset(t_data *data)
 	i = 0;
 	cmd = data->cmd_list;
 	if (!cmd->args[1])
-		return (1);
+		return (0);
 	while (cmd->args[i])
 	{
 		remove_from_list(&data->env, cmd->args[i]);

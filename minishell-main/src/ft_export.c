@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
+/*   By: broboeuf <broboeuf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 15:31:21 by garside           #+#    #+#             */
-/*   Updated: 2025/06/01 21:04:37 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/06/02 02:39:05 by broboeuf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,14 @@ static void	print_export_list(t_env *export)
 	}
 }
 
-static int	export_variable(t_data *data, t_cmd *cmd)
+int	export_variable(t_data *data, t_cmd *cmd)
 {
 	int	i;
 
-	i = 0;
+	i = 1;
 	while (cmd->args[i])
 	{
-		if (ft_is_valid(cmd->args[i]) != 0)
+		if (!ft_is_valid(cmd->args[i]))
 		{
 			ft_putstr_fd("export: `", 2);
 			ft_putstr_fd(cmd->args[i], 2);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bcaumont <bcaumont@student.42.fr>          +#+  +:+       +#+        */
+/*   By: broboeuf <broboeuf@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 19:11:06 by garside           #+#    #+#             */
-/*   Updated: 2025/06/01 21:30:12 by bcaumont         ###   ########.fr       */
+/*   Updated: 2025/06/02 03:02:55 by broboeuf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,13 @@ int	ft_isalldigit(char *str)
 {
 	int	i;
 
+	if (!str || !*str)
+		return (0);
 	i = 0;
+	if (str[0] == '+' || str[0] == '-')
+		i++;
+	if (!str[i])
+		return (0);
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
